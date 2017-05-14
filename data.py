@@ -1,7 +1,7 @@
 import csv
 import numpy as np
 
-def load_data(dataset):
+def load(dataset):
 	X = np.load('data/'+dataset+'.npy').astype(np.float32)
 
 	if dataset == 'train':
@@ -14,8 +14,3 @@ def load_data(dataset):
 
 def normalize(X):
 	pass
-
-if __name__ == '__main__':
-	X_train, y_train = load_data('train')
-	X_test = load_data('test')
-	normalize(X_train)
