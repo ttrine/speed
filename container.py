@@ -1,4 +1,5 @@
-from data import load, normalize, split
+import random
+from data import *
 
 class ModelContainer:
 	def __init__(self,name,model,n,optimizer):
@@ -9,13 +10,28 @@ class ModelContainer:
 		# model.compile(optimizer=optimizer, loss="mse")
 
 		X_train, y_train = load('train')
-		self.X_test = load('test')
+		X_test = load('test')
 		normalize(X_train, self.X_test)
 
 		X_train, X_val, y_train, y_val = split(X_train, y_train)
 
-	def sample_gen(self):
-		pass
+		self.X_val, self.y_val = sequence(n, X_val, y_val)
+		self.X_test = sequence(n, X_test)
+
+	def sample_gen(self, batch_size):
+		X_batch = []
+		y_batch = []
+
+		while True:
+			# if len(X_batch) == batch_size:
+				# yield np.array(X_batch), np.array(y_batch)
+				# X_batch = []
+				# y_batch = []
+
+			# range(len(self.X_train))
+			# X_batch.append(X[])
+
+			pass
 
 	def train(self):
 		pass

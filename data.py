@@ -34,3 +34,11 @@ def split(X, y):
 	y_val = X[splitter:]
 
 	return X_train, X_val, y_train, y_val
+
+def sequence(n, X, y=None):
+	# Turns X from (samples, length, width, 3)
+		# to (samples/n, n, length, width, 3)
+	X_new = np.array((X.shape[0]/n,n,X.shape[1],X.shape[2],X.shape[3]))
+	print X_new.shape
+	for i in range(n,len(X),n):
+		print i
