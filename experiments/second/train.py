@@ -40,5 +40,5 @@ if __name__ == '__main__':
 		print "Usage: train nb_epoch batch_size samples_per_epoch n"
 		sys.exit()
 
-	model = ModelContainer(name,construct(),sys.argv[4],"adam")
+	model = ModelContainer(name,construct(),int(sys.argv[4]),"adam")
 	model.train(nb_epoch=int(sys.argv[1]), batch_size=int(sys.argv[2]), samples_per_epoch=int(sys.argv[3]))
