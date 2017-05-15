@@ -58,8 +58,15 @@ class ModelContainer:
 		self.model.fit_generator(train_gen, samples_per_epoch=samples_per_epoch, nb_epoch=nb_epoch, 
 			validation_data=(self.X_val,self.y_val), verbose=1, callbacks=self.callbacks)
 
-	def evaluate(self):
-		# Run inference on each sequence in X_test in order
-		# Flatten out the predictions from each sequence
-		# Write to CSV
-		pass
+	def evaluate(self,weight_file):
+		self.model.load_weights('experiments/'+self.name+'/weights/'+weight_file)
+
+		print "Running inference..."
+
+		predictions = self.model.predict(self.X_test, verbose=True)
+
+		# f = file('experiments/'+self.name+'/test.txt','wb')
+		# w = csv.writer(f)
+		# w.writerows()
+		# f.close()
+		# print "Done. Wrote experiments/"+self.name+"/test.txt."
