@@ -1,4 +1,4 @@
-import random, os
+import random, os, csv
 from keras.callbacks import ModelCheckpoint
 from data import *
 
@@ -33,6 +33,7 @@ class ModelContainer:
 			if len(X_batch) == batch_size:
 				y_batch = np.array(y_batch)
 				y_batch = y_batch.reshape((y_batch.shape[0],y_batch.shape[1],1))
+				print y_batch
 				yield np.array(X_batch), y_batch
 				X_batch = []
 				y_batch = []
@@ -63,10 +64,11 @@ class ModelContainer:
 
 		print "Running inference..."
 
-		predictions = self.model.predict(self.X_test, verbose=True)
+		predictions = self.model.predict(self.X_test, verbose=True)[:,:,0]
 
-		# f = file('experiments/'+self.name+'/test.txt','wb')
-		# w = csv.writer(f)
-		# w.writerows()
-		# f.close()
-		# print "Done. Wrote experiments/"+self.name+"/test.txt."
+		f = file('experiments/'+self.name+'/test.txt','wb')
+		w = csv.writer(f)
+		[w.writerows([[e] for e in seq]) for seq in predictions]
+		[w.writerow(0.) for _ in range(8)]
+		f.close()
+		print "Done. Wrote experiments/"+self.name+"/test.txt."
