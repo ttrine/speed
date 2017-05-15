@@ -1,4 +1,4 @@
-import csv
+import csv, math
 import numpy as np
 
 def load(dataset):
@@ -12,18 +12,6 @@ def load(dataset):
 
 	return X
 
-def normalize(train, test):
-	''' Normalize feature-wise (RGB). '''
-
-	mean = np.mean(train,(0,1,2))
-	std = np.std(train,(0,1,2))
-
-	train -= mean
-	train /= std
-
-	test -= mean
-	test /= std
-
 def split(X, y):
 	''' Split training data 80-20. '''
 	splitter = len(X) / 5
@@ -31,14 +19,25 @@ def split(X, y):
 	X_val = X[splitter:]
 
 	y_train = y[0:splitter]
-	y_val = X[splitter:]
+	y_val = y[splitter:]
 
 	return X_train, X_val, y_train, y_val
 
 def sequence(n, X, y=None):
-	# Turns X from (samples, length, width, 3)
+	# Turn X from (samples, length, width, 3)
 		# to (samples/n, n, length, width, 3)
-	X_new = np.array((X.shape[0]/n,n,X.shape[1],X.shape[2],X.shape[3]))
-	print X_new.shape
-	for i in range(n,len(X),n):
-		print i
+	num_seqs = int(math.ceil(X.shape[0] / float(n)) - 1)
+	X_new = np.zeros((num_seqs,n,X.shape[1],X.shape[2],X.shape[3]))
+
+	if y is not None:
+		y_new = np.zeros((num_seqs,n))
+
+	for i, ind in enumerate(range(n,len(X),n)):
+		X_new[i] = X[ind - n:ind]
+		if y is not None:
+			y_new[i] = y[ind - n:ind]
+
+	if y is not None:
+		return X_new, y_new
+
+	return X_new

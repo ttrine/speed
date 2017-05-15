@@ -1,19 +1,24 @@
-import random
+import random, os
+from keras.callbacks import ModelCheckpoint
 from data import *
 
 class ModelContainer:
-	def __init__(self,name,model,n,optimizer):
+	def __init__(self,name,model,n,optimizer,callbacks=[]):
 		self.name = name
-		self.model = model
 		self.n = n
+		self.callbacks = callbacks
+		random.seed(42)
 
-		# model.compile(optimizer=optimizer, loss="mse")
+		model.compile(optimizer=optimizer, loss="mse")
+		self.model = model
 
 		X_train, y_train = load('train')
 		X_test = load('test')
-		normalize(X_train, self.X_test)
 
 		X_train, X_val, y_train, y_val = split(X_train, y_train)
+
+		self.X_train = X_train
+		self.y_train = y_train
 
 		self.X_val, self.y_val = sequence(n, X_val, y_val)
 		self.X_test = sequence(n, X_test)
@@ -23,25 +28,33 @@ class ModelContainer:
 		y_batch = []
 
 		while True:
-			# if len(X_batch) == batch_size:
-				# yield np.array(X_batch), np.array(y_batch)
-				# X_batch = []
-				# y_batch = []
+			if len(X_batch) == batch_size:
+				yield np.array(X_batch), np.array(y_batch)
+				X_batch = []
+				y_batch = []
 
-			# range(len(self.X_train))
-			# X_batch.append(X[])
+			start = random.randrange(len(self.X_train) - self.n)
+			print start
+			X_batch.append(self.X_train[start:start + self.n])
+			y_batch.append(self.y_train[start:start + self.n])
 
-			pass
+	def train(self, weight_file=None, nb_epoch=40, batch_size=500, samples_per_epoch=10000):
+		model_folder = 'experiments/' + self.name + '/weights/'
+		if not os.path.exists(model_folder):
+			os.makedirs(model_folder)
 
-	def train(self):
-		pass
+		if weight_file is not None:
+			self.model.load_weights(model_folder + self.name + weight_file)
+		
+		model_checkpoint = ModelCheckpoint(model_folder+'{epoch:002d}-{val_loss:.4f}.hdf5', monitor='loss')
+		self.callbacks.append(model_checkpoint)
+		train_gen = self.sample_gen(batch_size)
+
+		self.model.fit_generator(train_gen, samples_per_epoch=samples_per_epoch, nb_epoch=nb_epoch, 
+			validation_data=(self.X_val,self.y_val), verbose=1, callbacks=self.callbacks)
 
 	def evaluate(self):
-		# Break test set into length-n sequences
-		# Run inference on each sequence in order
+		# Run inference on each sequence in X_test in order
 		# Flatten out the predictions from each sequence
 		# Write to CSV
 		pass
-
-if __name__ == '__main__':
-	m = ModelContainer(None,None,None,None)
