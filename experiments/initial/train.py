@@ -15,7 +15,6 @@ def construct():
 	model.add(TimeDistributed(Flatten()))
 	model.add(TimeDistributed(Dense(128)))
 	model.add(SimpleRNN(128, return_sequences=True))
-	model.add(TimeDistributed(Reshape((128,))))
 	model.add(TimeDistributed(Dense(1)))
 	return model
 

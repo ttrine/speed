@@ -38,7 +38,7 @@ class ModelContainer:
 				y_batch = []
 
 			start = random.randrange(len(self.X_train) - self.n)
-			print start
+
 			X_batch.append(self.X_train[start:start + self.n])
 			y_batch.append(self.y_train[start:start + self.n])
 
