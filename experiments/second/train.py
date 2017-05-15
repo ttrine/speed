@@ -31,7 +31,6 @@ def construct():
 	model.add(TimeDistributed(Dense(1)))
 	return model
 
-
 if __name__ == '__main__':
 	import sys # basic arg parsing, infer name
 	name = sys.argv[0].split('/')[-2]
