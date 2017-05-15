@@ -38,6 +38,7 @@ def sequence(n, X, y=None):
 			y_new[i] = y[ind - n:ind]
 
 	if y is not None:
+		y_new = y_new.reshape((num_seqs,n,1))
 		return X_new, y_new
 
 	return X_new

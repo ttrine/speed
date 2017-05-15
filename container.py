@@ -12,14 +12,16 @@ class ModelContainer:
 		model.compile(optimizer=optimizer, loss="mse")
 		self.model = model
 
+		print "Loading train data..."
 		X_train, y_train = load('train')
+		print "Loading test data..."
 		X_test = load('test')
 
 		X_train, X_val, y_train, y_val = split(X_train, y_train)
-
 		self.X_train = X_train
 		self.y_train = y_train
 
+		print "Sequencing data..."
 		self.X_val, self.y_val = sequence(n, X_val, y_val)
 		self.X_test = sequence(n, X_test)
 
@@ -29,7 +31,9 @@ class ModelContainer:
 
 		while True:
 			if len(X_batch) == batch_size:
-				yield np.array(X_batch), np.array(y_batch)
+				y_batch = np.array(y_batch)
+				y_batch = y_batch.reshape((y_batch.shape[0],y_batch.shape[1],1))
+				yield np.array(X_batch), y_batch
 				X_batch = []
 				y_batch = []
 
@@ -50,6 +54,7 @@ class ModelContainer:
 		self.callbacks.append(model_checkpoint)
 		train_gen = self.sample_gen(batch_size)
 
+		print "Running training..."
 		self.model.fit_generator(train_gen, samples_per_epoch=samples_per_epoch, nb_epoch=nb_epoch, 
 			validation_data=(self.X_val,self.y_val), verbose=1, callbacks=self.callbacks)
 
