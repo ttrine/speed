@@ -3,9 +3,8 @@ from keras.callbacks import ModelCheckpoint
 from data import *
 
 class ModelContainer:
-	def __init__(self,name,model,n,optimizer,callbacks=[]):
+	def __init__(self,name,model,optimizer,callbacks=[]):
 		self.name = name
-		self.n = n
 		self.callbacks = callbacks
 		random.seed(42)
 
@@ -14,16 +13,15 @@ class ModelContainer:
 
 		print "Loading train data..."
 		X_train, y_train = load('train')
+
 		print "Loading test data..."
 		X_test = load('test')
 
-		X_train, X_val, y_train, y_val = split(X_train, y_train)
-		self.X_train = X_train
-		self.y_train = y_train
+		print "Stacking data..."
+		X_train, y_train = stack(X_train, y_train)
+		self.X_test = stack(X_test)
 
-		print "Sequencing data..."
-		self.X_val, self.y_val = sequence(n, X_val, y_val)
-		self.X_test = sequence(n, X_test)
+		self.X_train, self.X_val, self.y_train, self.y_val = split(X_train, y_train)
 
 	def sample_gen(self, batch_size):
 		X_batch = []
@@ -32,16 +30,17 @@ class ModelContainer:
 		while True:
 			if len(X_batch) == batch_size:
 				y_batch = np.array(y_batch)
-				y_batch = y_batch.reshape((y_batch.shape[0],y_batch.shape[1],1))
-
+				y_batch = y_batch.reshape((y_batch.shape[0],1))
+				print np.array(X_batch), y_batch
 				yield np.array(X_batch), y_batch
+
 				X_batch = []
 				y_batch = []
 
-			start = random.randrange(len(self.X_train) - self.n)
+			sample = random.randrange(len(self.X_train))
 
-			X_batch.append(self.X_train[start:start + self.n])
-			y_batch.append(self.y_train[start:start + self.n])
+			X_batch.append(self.X_train[sample])
+			y_batch.append(self.y_train[sample])
 
 	def train(self, weight_file=None, nb_epoch=40, batch_size=500, samples_per_epoch=10000):
 		model_folder = 'experiments/' + self.name + '/weights/'
@@ -68,7 +67,7 @@ class ModelContainer:
 
 		f = file('experiments/'+self.name+'/test.txt','wb')
 		w = csv.writer(f)
+		w.writerow([0.])
 		[w.writerows([[e] for e in seq]) for seq in predictions]
-		[w.writerow(0.) for _ in range(8)]
 		f.close()
 		print "Done. Wrote experiments/"+self.name+"/test.txt."

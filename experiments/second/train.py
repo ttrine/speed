@@ -34,11 +34,12 @@ def construct():
 
 if __name__ == '__main__':
 	import sys # basic arg parsing, infer name
-	name = sys.argv[0].split('/')[-2]
-	
+
 	if len(sys.argv) < 4:
-		print "Usage: train nb_epoch batch_size samples_per_epoch n"
+		print "Usage: train nb_epoch batch_size samples_per_epoch"
 		sys.exit()
 
-	model = ModelContainer(name,construct(),int(sys.argv[4]),"adam")
+	name = sys.argv[0].split('/')[-2]
+	
+	model = ModelContainer(name,construct(),"adam")
 	model.train(nb_epoch=int(sys.argv[1]), batch_size=int(sys.argv[2]), samples_per_epoch=int(sys.argv[3]))
