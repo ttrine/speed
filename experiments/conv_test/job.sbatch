@@ -7,4 +7,4 @@ source /scratch/ttrine/speed/venv/bin/activate
 PYTHONPATH=/scratch/ttrine/speed/venv/lib/python2.7/site-packages:$PYTHONPATH
 export PYTHONPATH
 export THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32,exception_verbosity=high
-python -m experiments.conv_test.train 1000 10 1000
+python -m experiments.conv_test.train 1000 100 10000
