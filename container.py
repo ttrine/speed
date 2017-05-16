@@ -31,7 +31,6 @@ class ModelContainer:
 			if len(X_batch) == batch_size:
 				y_batch = np.array(y_batch)
 				y_batch = y_batch.reshape((y_batch.shape[0],1))
-				print np.array(X_batch), y_batch
 				yield np.array(X_batch), y_batch
 
 				X_batch = []
