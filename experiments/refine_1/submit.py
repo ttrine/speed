@@ -9,5 +9,5 @@ if __name__ == '__main__':
 		print "Usage: submit weight_file"
 		sys.exit()
 
-	c = ModelContainer(name,construct(),10,"adam")
+	c = ModelContainer(name,construct(),"adam")
 	c.evaluate(str(sys.argv[1]))
