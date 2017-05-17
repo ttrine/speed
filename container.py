@@ -67,6 +67,6 @@ class ModelContainer:
 		f = file('experiments/'+self.name+'/test.txt','wb')
 		w = csv.writer(f)
 		w.writerow([0.])
-		[w.writerows([[e] for e in seq]) for seq in predictions]
+		[w.writerows([[pred] for pred in predictions])
 		f.close()
 		print "Done. Wrote experiments/"+self.name+"/test.txt."
