@@ -29,4 +29,4 @@ test = to_tensor('test')
 normalize(train,test)
 
 np.save('data/train',train)
-np.save('data/train',test)
+np.save('data/test',test)

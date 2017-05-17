@@ -1,8 +1,10 @@
 import csv, math
 import numpy as np
 
+from sklearn.model_selection import train_test_split
+
 def load(dataset):
-	X = np.load('data/'+dataset+'.npy').astype(np.float32)
+	X = np.load('data/'+dataset+'.npy')
 
 	if dataset == 'train':
 		f = file('data/'+dataset+'.txt')
@@ -14,15 +16,9 @@ def load(dataset):
 
 def split(X, y):
 	''' Split training data 80-20. '''
-	splitter = len(X) / 5
-
-	X_val = X[0:splitter]
-	X_train = X[splitter:]
-
-	y_val = y[0:splitter]
-	y_train = y[splitter:]
-
-	return X_train, X_val, y_train, y_val
+	print X.shape, y.shape
+	return train_test_split(
+		X, y, test_size=0.2, random_state=42)
 
 def stack(X, y=None):
 	# Turn X from (samples, length, width, 3)

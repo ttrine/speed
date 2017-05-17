@@ -18,6 +18,7 @@ class ModelContainer:
 		X_test = load('test')
 
 		print "Stacking data..."
+		print X_train.shape, y_train.shape
 		X_train, y_train = stack(X_train, y_train)
 		self.X_test = stack(X_test)
 
