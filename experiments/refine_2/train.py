@@ -7,7 +7,8 @@ from container import ModelContainer
 
 def construct():
 	model = Sequential()
-	model.add(ZeroPadding2D((3, 3),input_shape=(120,160,6)))
+	model.add(BatchNormalization(input_shape=(120,160,6)))
+	model.add(ZeroPadding2D((3, 3)))
 	model.add(Convolution2D(32, 5, 5, activation='relu'))
 	model.add(MaxPooling2D(pool_size=(4, 4), strides=(2, 2)))
 
