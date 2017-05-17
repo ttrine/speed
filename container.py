@@ -62,7 +62,7 @@ class ModelContainer:
 
 		print "Running inference..."
 
-		predictions = self.model.predict(self.X_test, verbose=True)[:,:,0]
+		predictions = self.model.predict(self.X_test, verbose=True)[:,0]
 
 		f = file('experiments/'+self.name+'/test.txt','wb')
 		w = csv.writer(f)
