@@ -15,8 +15,7 @@ def load(dataset):
 	return X
 
 def split(X, y):
-	''' Split training data 80-20. '''
-	print X.shape, y.shape
+	''' Set aside 20% of the data for training. '''
 	return train_test_split(
 		X, y, test_size=0.2, random_state=42)
 

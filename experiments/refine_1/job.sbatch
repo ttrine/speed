@@ -1,5 +1,5 @@
 #!/bin/sh
-#SBATCH --partition=gpu --gres=gpu:1 --mem=32GB --time=10:00:00 -J refine_1 -o /scratch/ttrine/speed/experiments/refine_1/log.out
+#SBATCH --partition=gpu --gres=gpu:1 --mem=63GB --time=10:00:00 -J refine_1 -o /scratch/ttrine/speed/experiments/refine_1/log.out
 cd /scratch/ttrine/speed/
 module load python/2.7.12/b2 blas hdf5/1.8.14 cudnn/7.5 git opencv
 module unload python/2.7.10
