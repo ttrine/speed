@@ -45,35 +45,28 @@ def pool_5x5(x,nb_1x1,nb_3x3_reduce,nb_3x3,nb_3x3dbl_reduce,nb_3x3dbl,nb_pool):
 
 	return x
 
-def stem(x):
-	x = BatchNormalization()(x)
-	x = Convolution2D(16, 3, 3, subsample=(2,2), border_mode="same", activation="relu")(x)
+def construct():
+	inp = Input(shape=(120,160,6))
+	
+	x = Convolution2D(16, 3, 3, subsample=(2,2), border_mode="same", activation="relu")(inp)
 	x = Convolution2D(32, 3, 3, border_mode="same", activation="relu")(x)
 	x = MaxPooling2D((3,3), strides=(2,2))(x)
 	x = Convolution2D(64, 3, 3, subsample=(2,2), border_mode="same", activation="relu")(x)
 	x = Convolution2D(64, 3, 3, subsample=(2,2), border_mode="same", activation="relu")(x)
 	x = BatchNormalization()(x)
+
 	x = factor_5x5(x,40,24,40,32,48)
-	# x = SpatialDropout2D(.1)(x)
 	x = pool_5x5(x,64,48,64,64,96,32)
-	# x = SpatialDropout2D(.1)(x)
-	x = factor_5x5(x,80,48,80,64,96)
-	return x
+	x = BatchNormalization()(x)
 
-def construct():
-	inp = Input(shape=(120,160,6))
-	x = stem(inp)
+	x = factor_5x5(x,64,48,64,64,64)
+	x = pool_5x5(x,64,48,64,64,64,32)
+	x = BatchNormalization()(x)
 
-	x = pool_5x5(x,64,48,64,64,96,32)
-	# x = SpatialDropout2D(.2)(x)
-
-	x = pool_5x5(x,85,64,85,64,128,43)
-	# x = SpatialDropout2D(.2)(x)
-
-	x = pool_5x5(x,106,80,106,106,160,54)
-	# x = SpatialDropout2D(.2)(x)
-
-	x = pool_5x5(x,128,96,128,128,192,64)
+	x = pool_5x5(x,70,64,70,55,96,43)
+	x = pool_5x5(x,96,80,96,96,96,54)
+	x = pool_5x5(x,96,96,96,96,192,64)
+	x = BatchNormalization()(x)
 
 	fcn = Flatten()(x)
 	fcn = Dropout(.5)(fcn)
