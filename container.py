@@ -1,11 +1,13 @@
 import random, os, csv
 from keras.callbacks import ModelCheckpoint
+from keras.preprocessing.image import ImageDataGenerator
 from data import *
 
 class ModelContainer:
-	def __init__(self,name,model,optimizer,callbacks=[]):
+	def __init__(self,name,model,optimizer,datagen_args=dict(),callbacks=[]):
 		self.name = name
 		self.callbacks = callbacks
+		self.datagen_args=datagen_args
 		random.seed(42)
 
 		model.compile(optimizer=optimizer, loss="mse")
@@ -24,22 +26,12 @@ class ModelContainer:
 		self.X_train, self.X_val, self.y_train, self.y_val = split(X_train, y_train)
 
 	def sample_gen(self, batch_size):
-		X_batch = []
-		y_batch = []
-
+		image_datagen = ImageDataGenerator(**self.datagen_args)
+		image_gen = image_datagen.flow(self.X_train,self.y_train,batch_size=batch_size)
 		while True:
-			if len(X_batch) == batch_size:
-				y_batch = np.array(y_batch)
-				y_batch = y_batch.reshape((y_batch.shape[0],1))
-				yield np.array(X_batch), y_batch
-
-				X_batch = []
-				y_batch = []
-
-			sample = random.randrange(len(self.X_train))
-
-			X_batch.append(self.X_train[sample])
-			y_batch.append(self.y_train[sample])
+			X_batch, y_batch = image_gen.next()
+			y_batch = y_batch.reshape((y_batch.shape[0],1))
+			yield X_batch, y_batch
 
 	def train(self, weight_file=None, nb_epoch=40, batch_size=500, samples_per_epoch=10000):
 		model_folder = 'experiments/' + self.name + '/weights/'
