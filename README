@@ -1,3 +1,17 @@
-Brief description of infrastructure
-Brief description of results
-How to run
+System. I set aside 10 equally-sized contiguous regions for validation. I spin up an object-oriented system that allows me to rapidly prototype models. I train these models remotely on a Tesla GPU. The final model is in experiments/refine_6/train.py. It consists of several inception blocks and employs batch normalization, dataset augmentation, and dropout.
+
+This explanation is very brief - please reach out to me if you have any questions.
+
+Results. My best model yielded an MSE of 9.15 on my validation set.
+
+How to run. To run my models follow these steps:
+
+1. Put train.mp4, test.mp4, train.txt in the data subfolder.
+
+2. Run these commands in the project directory.
+pip install -r requirements.txt
+python preprocess.py
+python -m experiments.[experiment_subfolder].train [epochs] [batch_size] [samples_per_epoch]
+
+A concrete example of the last line above is:
+python -m experiments.refine_6.train 1000 10 2500

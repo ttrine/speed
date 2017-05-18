@@ -1,5 +1,5 @@
 cd /scratch/ttrine/speed/
-salloc -p gpu --gres=gpu:1 -t 1:00:00 --mem=31GB
+salloc -p gpu --gres=gpu:1 -t 1:00:00 --mem=96GB
 srun --pty $SHELL -I
 module load python/2.7.12/b2 blas hdf5/1.8.14 cudnn/7.5 git opencv
 module unload python/2.7.10
