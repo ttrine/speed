@@ -59,6 +59,7 @@ def construct():
 	x = pool_5x5(x,64,48,64,64,96,32)
 	x = BatchNormalization()(x)
 
+	x = factor_5x5(x,64,48,64,64,64)
 	x = pool_5x5(x,64,48,64,64,64,32)
 	x = BatchNormalization()(x)
 
