@@ -48,8 +48,7 @@ def pool_5x5(x,nb_1x1,nb_3x3_reduce,nb_3x3,nb_3x3dbl_reduce,nb_3x3dbl,nb_pool):
 def construct():
 	inp = Input(shape=(120,160,6))
 	
-	x = BatchNormalization()(inp)
-	x = Convolution2D(16, 3, 3, subsample=(2,2), border_mode="same", activation="relu")(x)
+	x = Convolution2D(16, 3, 3, subsample=(2,2), border_mode="same", activation="relu")(inp)
 	x = Convolution2D(32, 3, 3, border_mode="same", activation="relu")(x)
 	x = MaxPooling2D((3,3), strides=(2,2))(x)
 	x = Convolution2D(64, 3, 3, subsample=(2,2), border_mode="same", activation="relu")(x)
@@ -66,7 +65,6 @@ def construct():
 
 	x = pool_5x5(x,85,64,85,64,128,43)
 	x = pool_5x5(x,106,80,106,106,160,54)
-	x = BatchNormalization()(x)
 	x = pool_5x5(x,128,96,128,128,192,64)
 
 	fcn = Flatten()(x)
