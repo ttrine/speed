@@ -75,6 +75,13 @@ def construct():
 
 	return Model(input=inp,output=fcn)
 
+datagen_args = dict(rotation_range=5.,
+					width_shift_range=0.05,
+					height_shift_range=0.05,
+					zoom_range=0.05,
+					channel_shift_range=0.,
+					horizontal_flip=False)
+
 if __name__ == '__main__':
 	import sys # basic arg parsing, infer name
 
@@ -84,5 +91,5 @@ if __name__ == '__main__':
 
 	name = sys.argv[0].split('/')[-2]
 	
-	model = ModelContainer(name,construct(),"adam")
+	model = ModelContainer(name,construct(),"adam",datagen_args=datagen_args)
 	model.train(nb_epoch=int(sys.argv[1]), batch_size=int(sys.argv[2]), samples_per_epoch=int(sys.argv[3]))
